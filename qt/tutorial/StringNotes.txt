@@ -1,0 +1,67 @@
+Notes related to string manipulation using Qt:
+
+QString str;
+
+QTextStream:
+- in order to output QString objects, we need an output stream that can handle them, so we create a QTextStream with another output stream as a parameter
+- For example, we can use cout:
+	QTextStream out(stdout);
+- so that when we want to output strings to console, we use our QTextStream rather than the standard output stream, so rather than
+	cout << 'a string' << endl
+- we instead use
+	out << 'a QString' << endl
+
+Some basic functions:
+- str.append(string input) - appends the contents of input to the end of str
+- str.prepend(string input) - appends the contents of input to the beginning of str
+
+- str.count() - returns the number of characters in a QString object
+
+- str.toUpper() - returns a copy of str with all of the characters changed to uppercase
+- str.toLower() - returns a copy of str with all of the characters changed to lowercase
+
+Ways to initate QStrings:
+- standard initialization (QString str1;)
+- Object initialization (Qstring str1('some text');)
+- using std::string from the C++ std library which has a method that returns a C String (or null terminated sequence of characters) 
+- Extracting the data from a C++ string (std::string) and using the QString::fromLatin1(char* data, int length) method to create a new QString
+- using object initialization with a character array as input QString str(cstring)
+
+Accessing string elements:
+- Standard array element access (str[0] = first character of str)
+- using str.at(0) gives the same result
+- note that both methods will return null when called on a value outside of the range of the string
+
+Ways to get String Length:
+- str.size()
+- str.count()
+- str.length()
+- All do the same thing
+
+Dynamic String building:
+- We can use the arg function to dynamically insert arguments into a QString
+- If we define a string with the markers %1, %2, ... , %n, the arg function replaces these markers with arguments. For example:
+	int hoursPerDay = 24;
+	int daysPerWeek = 7;
+	QString str = 'There are %1 hours in a day and %2 hours in a week;
+	cout << str.arg(hoursPerDay).arg(hoursPerDay * daysPerWeek) << endl;
+
+	OUTPUT: There are 7 hours in a day and 168 hours in a week
+
+- The first application of the arg function replaces all %1 markers with the argument of the function
+- The next application of arg replaces %2, then %3 and so on
+
+Substrings
+- str.right() str.left() and str.mid() all return substrings of a QString
+- str.right(int numChars) returns numChars characters starting at the right side of the string
+- str.left(int numChars) returns numChars charactesr starting at the left side
+- str.mid(int start, int numChars) returns a substring of length numChars that starts at the start argument
+- While not a standard substring operation, we can use the sub() function to get a QStringRef which is a read-only version of a QString
+- sub takes a string address and returns a QStringRef as follows:
+	QString str1("'monochrome laser printer');
+	QStringRef sub(&str1, 11, 5);
+	out << sub.toString() << endl;
+
+- Notice that we need to call toString() on the QStringRef for it to be in a printable state
+
+
