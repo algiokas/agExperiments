@@ -1,0 +1,4 @@
+#ifndef ARTILLERY_GAME_H
+#define ARTILLERY_GAME_H
+
+#endif // ARTILLERY_GAME_H
