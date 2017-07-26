@@ -10,6 +10,7 @@ std::string months[] = {"January", "February", "March", "April", "May", "June",
 
 using namespace std; 
 
+//returns true of the input string is valid, false otherwise
 bool validCode(string code) {
 	if (code.length() != 4) {
 		return false;
@@ -21,7 +22,7 @@ bool validCode(string code) {
 	}
 
 	if (charVals[0] > 76 || charVals[0] < 65) { return false; } //ASCII chars A-L
-	if (charVals[1] > 84 || charVals[1] < 81) { return false; } //ASCII chars Q-S
+	if (charVals[1] > 84 || charVals[1] < 81) { return false; } //ASCII chars Q-T
 	if (charVals[2] > 90 || charVals[2] < 81) { return false; } //ASCII chars Q-Z
 	if (charVals[3] > 90 || charVals[3] < 65) { return false; } //ASCII chars A-Z
 	if (charVals[1] == 81 && charVals[2] == 81) { return false; } //00 is not a valid day
@@ -30,22 +31,33 @@ bool validCode(string code) {
 	return true;
 }
 
-
+void printRange() {
+	cout << "First Character: between A and L" << endl;
+	cout << "Second Character: between Q and T" << endl;
+	cout << "Third Character: between Q and Z"; 
+	cout << " (cannot be Q if previous character was Q), (Cannot only be Q or R if previous character was S)" << endl;
+	cout << "Fourth Character: between A and Z" << endl;
+}
 
 int main (void) {
 	string code;
 	do {
-		cout << "Enter a valid 4 letter date code (q to quit): ";
+		cout << "Enter a valid 4 letter date code (q to quit, h for help): ";
 		cin >> code;
 
 		if (code == "q" || code == "Q") {break;} 
-	
+
+		if (code == "h" || code == "H") {
+			printRange();
+			continue;
+		}
+
 		int charVals[4];
 		for (int i = 0; i < 4; i++) {
 			charVals[i] = (int) code.at(i);
 		}
 		if (!validCode(code)) {
-			cout << "Invalid code, terminating" << endl;
+			cout << "Invalid code" << endl;
 		} else {
 			int mo = charVals[0] - 65;
 			int day = ((charVals[1] - 81) * 10) + (charVals[2] - 81);

@@ -8,6 +8,8 @@
 #include <math.h>
 #include <limits>
 
+#include "artillery_game.h"
+
 #define _USE_MATH_DEFINES //gives access to common math constants such as pi
 
 int ammo = 10; //amount of ammo available for each round
@@ -59,6 +61,8 @@ double convert_angle(double rawAngle) {
 	return (2 * M_PI) * ((fmod(rawAngle, 360)) / 360);
 }
 
+//calculates the ballistic distance travelled by a projectile given its angle,
+//initial height is assumed to be 0 and initial velocity is determined by the global variable velocity
 int calculate_dist(double angle) {
 	double rAngle = convert_angle(angle); //get angle in radians to use with sin() and cos()
 
@@ -93,7 +97,7 @@ bool fire(int distance, int shot) {
 
 
 //main loop for a single round (1 distance, [ammo] tries)
-bool round() {
+bool play_round() {
 	int spent; //spent ammo
 	int distance = rand_distance(); 
 	int impact, proximity;
@@ -117,7 +121,7 @@ int main () {
 	int killed = 0;
 
 	do {
-		if (round()) {
+        if (play_round()) {
 			killed++;
 		}
 		cout << "Play Again? (Y/N) " << endl;
