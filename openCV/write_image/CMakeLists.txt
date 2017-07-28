@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project(write_image)
+find_package(OpenCV REQUIRED)
+include_directories( ${OpenCV_INCLUDE_DIRS})
+add_executable(write_image write_image.cpp) 
+target_link_libraries(write_image ${OpenCV_LIBS})
