@@ -2,6 +2,11 @@ import time
 import linecache
 import os
 
+#system information file paths
+cpuinfo = "/proc/cpuinfo"
+meminfo = "/proc/meminfo"
+stat    = "/proc/stat"
+
 #returns the number of CPU cores in a linux system
 def cpucores():
         ss = "cpu cores" #search string
@@ -36,32 +41,39 @@ def printtime_c():
                         print("{:^8}".format(x), end = ''),
                 print('\n') 
 
-#display cumulative timing data every second for [secs] seconds 
-def monitor_c(secs):        
-        for i in range(secs):
-                os.system('clear')
-                print(time.time())
-                print(usage_c(0))
-                print(avg_usage_pct(0))
-                printtime_c()
-                time.sleep(1 - (time.time() % 1))
-
-#returns the cumulative usage seconds of a core
-def usage_c(core):
+#returns a 2 element list containing the cumulative usage and idle time of a core
+def usage_idle_c(core):
         total = 0
+        use_idle = []
         data = read_core_time(core)
         for i, val in enumerate(data):
                 if (not i == 0) and (not i == 4):
                         total += int(val)
-        return total                
+        use_idle.append(total)
+        use_idle.append(int(data[4]))
+        return use_idle
 
 #returns the percent average CPU usage for a core
 def avg_usage_pct(core):
-        data = read_core_time(core)
-        use = usage_c(core)
-        total = int(data[4]) + use
+        data = usage_idle_c(core)
+        use = data[0]
+        idle = data[1]
+        total = use + idle 
         return use / float(total)
 
 
-        
+
+#display cumulative timing data every second for [secs] seconds 
+def monitor_c(secs):
+        prev = usage_idle_c(0)
+        for i in range(secs):
+                os.system('clear')
+                curr = usage_idle_c(0)
+                print(curr)
+                print([int(curr[0] - prev[0]), int(curr[1] - prev[1])])
+                print(time.time())
+                print(avg_usage_pct(0))
+                printtime_c()
+                time.sleep(1 - (time.time() % 1))
+
 
